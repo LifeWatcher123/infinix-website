@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Since we’re working full localhost, CORS feature is disabled for now
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 
@@ -40,6 +42,7 @@ INSTALLED_APPS = [
     # Added dependencies
     'rest_framework',
     'corsheaders',
+    'web_api'
 ]
 
 MIDDLEWARE = [
