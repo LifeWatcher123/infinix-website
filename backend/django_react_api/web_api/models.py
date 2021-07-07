@@ -12,7 +12,7 @@ class Section(models.Model):
 	header = models.CharField(max_length=250)
 	body = models.TextField()
 	
-	game = models.ForeignKey(Game, on_delete=models.CASCADE)
+	game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='sections')
 	
 	def __str__(self):
 		return self.header
@@ -21,7 +21,7 @@ class Image(models.Model):
 	alt_text = models.CharField(max_length=250)
 	link = models.CharField(max_length=250)
 	
-	section = models.ForeignKey(Section, on_delete=models.CASCADE)
+	section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='images')
 	
 	def __str__(self):
 		return self.alt_text 
