@@ -2,10 +2,6 @@
 
 from django.db import migrations
 
-def create_test_data(apps, schema_editor):
-    Game_apexlegends = apps.get_model('web_api', 'Game')
-    Game_apexlegends(title="Apex Legends").save()
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -13,5 +9,4 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(create_test_data),
     ]
