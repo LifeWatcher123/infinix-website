@@ -1,9 +1,13 @@
 import React from "react";
+import MasterHome from "./components/MasterHome/index"
+import GameAlbums from "./components/GameAlbums/index";
+
 const App = () => {
   return (
-    <div>
-      <h1> Infinix Website </h1>
-    </div>
+    <>
+      <MasterHome />
+      <GameAlbums />
+    </>
   );
 };
 export default App;

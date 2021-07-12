@@ -1,1 +1,16 @@
-@import "../node_modules/bootstrap/scss/bootstrap.scss";    
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+
+/*! `Custom` Bootstrap 5 theme */
+@import url(https://fonts.googleapis.com/css?family=Nunito:200,300,400,700);
+$font-family-base:Nunito;
+@import url(https://fonts.googleapis.com/css?family=Comfortaa:200,300,400,700);
+$headings-font-family:Comfortaa;
+
+$primary:#ff7518;
+$secondary:#fb8b24;
+$success:#015668;
+$danger:#af1b3f;
+$info:#0F81C7;
+$warning:#f9dc5c;
+$light:#ececec;
+$dark:#222222;
