@@ -16,10 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from web_api import views
-from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^api/games/$', views.games_list),
     re_path(r'^api/games/([0-9])$', views.game_detail),
+    re_path(r'^api/sections/$', views.sections_list),
+    re_path(r'^api/sections/([0-9])$', views.section_detail),
 ]

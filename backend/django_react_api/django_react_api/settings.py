@@ -33,6 +33,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
 
 INSTALLED_APPS = [
+    'web_api.apps.WebApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,7 +43,6 @@ INSTALLED_APPS = [
     # Added dependencies
     'rest_framework',
     'corsheaders',
-    'web_api'
 ]
 
 MIDDLEWARE = [
