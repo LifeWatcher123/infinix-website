@@ -72,6 +72,10 @@ INSTALLED_APPS = [
     # Added Third-Party Wagtail dependencies
     'taggit',
     'modelcluster',
+
+    # Project apps
+    'home',
+    'blog',
 ]
 
 MIDDLEWARE = [
