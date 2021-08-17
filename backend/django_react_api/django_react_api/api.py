@@ -1,12 +1,15 @@
 """
 Wagtail API configuration file. See
 https://docs.wagtail.io/en/stable/advanced_topics/api/v2/configuration.html for more details.
+
+Note: Other endpoints like 'media' and 'static' are defined in the `settings.py`.
 """
 
 from wagtail.api.v2.views import PagesAPIViewSet
 from wagtail.api.v2.router import WagtailAPIRouter
 from wagtail.images.api.v2.views import ImagesAPIViewSet
 from wagtail.documents.api.v2.views import DocumentsAPIViewSet
+from .endpoints import GameModelAPIViewset
 
 # Create the router. "wagtailapi" is the URL namespace
 api_router = WagtailAPIRouter('wagtailapi')
@@ -18,3 +21,5 @@ api_router = WagtailAPIRouter('wagtailapi')
 api_router.register_endpoint('pages', PagesAPIViewSet)
 api_router.register_endpoint('images', ImagesAPIViewSet)
 api_router.register_endpoint('documents', DocumentsAPIViewSet)
+# Custom endpoints defined in the `endpoints.py` file go here.
+api_router.register_endpoint('games', GameModelAPIViewset)

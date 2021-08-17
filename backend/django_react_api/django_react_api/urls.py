@@ -26,7 +26,6 @@ urlpatterns = [
     # Wagtail Admin and other links
     path('wagtail-cms/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
-    path('games/', include(wagtail_urls)),
 
     # Wagtail Headless CMS API
     path('wagtail-api/', api_router.urls),
