@@ -28,6 +28,8 @@ from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.api.fields import ImageRenditionField
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
+# Import `web_api`'s image serializer, as lazy importing doesn't work
+from web_api.models import ImageSerializedField
 
 
 class GameBlogPageCarouselImages(Orderable):
@@ -91,7 +93,7 @@ class GamesBlogAuthorOrderable(Orderable):
         APIField("author_name"),
         APIField("author_website"),
         # This is using a custom django rest framework serializer. See this class' docstring
-        APIField("author_image", serializer='web_api.ImageSerializedField()'),
+        APIField("author_image", serializer=ImageSerializedField()),
         # The below APIField is using a Wagtail-built DRF Serializer that supports
         # custom image rendition sizes. See this class' docstring
         APIField(
@@ -125,6 +127,11 @@ class GameBlogPage(Page):
         on_delete=models.PROTECT,
         related_name='sections')
 
+    @property
+    def game_title(self):
+        """ Used to access the related Game's title property. """
+        return self.game.title
+
     album_image = models.ForeignKey(
         'wagtailimages.Image',
         null=True,
@@ -142,6 +149,7 @@ class GameBlogPage(Page):
     published_date = models.DateTimeField()
 
     content_panels = Page.content_panels + [
+        ImageChooserPanel('album_image'),
         FieldPanel('introduction'),
         MultiFieldPanel(
             [
@@ -169,7 +177,7 @@ class GameBlogPage(Page):
         APIField("blog_authors"),
         APIField("body"),
         APIField('published_date'),
-        APIField('album_image'),
+        APIField('album_image', serializer=ImageSerializedField()),
         APIField('game_carousel_images'),
     ]
 
