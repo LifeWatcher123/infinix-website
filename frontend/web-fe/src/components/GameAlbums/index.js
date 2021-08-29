@@ -2,125 +2,103 @@ import React, { Component } from "react";
 import "./index.css";
 
 import axios from "axios";
-import { API_GAMES_URL } from "../../constants";
-
-/* TODO Implement dynamic album item creation */
+import {
+  API_ROOT,
+  API_GAMEBLOGPAGES_WITH_THUMBNAIL_URL,
+} from "../../constants";
+/**
+ * This implements a dynamic rendering of album items from an API.
+ * The following props must be supplied:
+ *  - albumDataUrl
+ *  -
+ */
 class GameAlbums extends Component {
-  state = {
-    games: []
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      inProgress: true,
+      games: [],
+    };
+  }
 
   componentDidMount() {
-    this.resetState();
+    this.fetchData();
   }
 
-  getGames = () => {
-    axios.get(API_GAMES_URL).then(res => this.setState({ games: res.data}))
-  }
-
-  resetState = () => {
-    this.getGames();
+  fetchData = () => {
+    axios.get(API_GAMEBLOGPAGES_WITH_THUMBNAIL_URL).then((res) => {
+      this.setState({ games: res.data.items, inProgress: false });
+    });
   };
 
   render() {
-    const gamesCards = this.state.games.map((game) => <AlbumItem title={game.title}/>);
+    const gamesCards = this.state.games.map((game) => (
+      <AlbumItem key={game.id} title={game.title} url={game.album_image.url} />
+    ));
 
     return (
-      <body className="game-album">
-        <main>
-          <section class="py-5 text-center container">
-            <div class="row py-lg-5">
-              <div class="col-lg-6 col-md-8 mx-auto">
-                <h1 class="fw-light">Album example</h1>
-                <p class="lead text-muted">
-                  Something short and leading about the collection below—its
-                  contents, the creator, etc. Make it short and sweet, but not
-                  too short so folks don’t simply skip over it entirely.
-                </p>
-                <p>
-                  <a href="#" class="btn btn-primary mt-2 mb-1">
-                    Main call to action
-                  </a>
-                  <a href="#" class="btn btn-secondary mt-2 mb-1">
-                    Secondary action
-                  </a>
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <div class="album py-5 bg-light">
-            <div class="container">
-              <div class="d-flex flex-row flex-wrap justify-content-center">
-                {gamesCards}
-              </div>
+      <div className="game-album py-5">
+        <section className="text-center container">
+          <div className="row py-lg-5">
+            <div className="col-lg-6 col-md-8 mx-auto">
+              <h1 className="fw-light">Album example</h1>
+              <p className="lead text-muted">
+                Something short and leading about the collection below—its
+                contents, the creator, etc. Make it short and sweet, but not too
+                short so folks don’t simply skip over it entirely.
+              </p>
             </div>
           </div>
-        </main>
+        </section>
 
-        <footer class="text-muted py-5">
-          <div class="container">
-            <p class="float-end mb-1">
-              <a href="#">Back to top</a>
-            </p>
-            <p class="mb-1">
-              Album example is &copy; Bootstrap, but please download and
-              customize it for yourself!
-            </p>
-            <p class="mb-0">
-              New to Bootstrap? <a href="/">Visit the homepage</a> or read our{" "}
-              <a href="../getting-started/introduction/">
-                getting started guide
-              </a>
-              .
-            </p>
+        <div className="album py-5 bg-light">
+          <div className="container">
+            <div className="d-flex flex-row flex-wrap justify-content-center">
+              {gamesCards}
+            </div>
           </div>
-        </footer>
+        </div>
 
         <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
-      </body>
+      </div>
     );
   }
 }
-
-function AlbumItem(props) {
+/**
+ * Component for dynamic album content.
+ * Should have the following properties:
+ *  - url
+ *  - title
+ */
+const AlbumItem = (props) => {
   return (
     <div>
-      <div class="card shadow-sm m-3" style={{ width: "18rem" }}>
-        <svg
-          class="bd-placeholder-img card-img-top"
+      <div className="card shadow-sm m-3" style={{ width: "22rem" }}>
+        <img
+          className="bd-placeholder-img card-img-top"
           width="100%"
           height="225"
-          xmlns="http://www.w3.org/2000/svg"
+          src={API_ROOT + props.url}
           role="img"
-          aria-label="Placeholder: Thumbnail"
           preserveAspectRatio="xMidYMid slice"
           focusable="false"
-        >
-          <title>Placeholder</title>
-          <rect width="100%" height="100%" fill="#55595c" />
-          <text x="50%" y="50%" fill="#eceeef" dy=".3em">
-            Thumbnail
-          </text>
-        </svg>
+        />
 
-        <div class="card-body">
-          <h6 class="card-text">{props.title}</h6>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-outline-secondary">
-                View
-              </button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">
-                Edit
+        <div className="card-body">
+          <h6 className="card-text">{props.title}</h6>
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="btn-group">
+              <button type="button" className="btn btn-outline-primary">
+                Open
               </button>
             </div>
-            <small class="text-muted">9 mins</small>
+            <small className="text-muted">9 mins</small>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default GameAlbums;
