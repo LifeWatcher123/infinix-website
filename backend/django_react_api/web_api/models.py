@@ -4,25 +4,11 @@ Django models that isn't a Wagtail Page
 from django.db import models
 
 # Wagtail-specific model fields and admin editing integration dependencies.
-from rest_framework.fields import Field
 from wagtail.admin.edit_handlers import (
     FieldPanel, MultiFieldPanel
 )
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.snippets.models import register_snippet
-
-
-class ImageSerializedField(Field):
-    """A custom serializer used in Wagtails v2 API."""
-
-    def to_representation(self, value):
-        """Return the image URL, title and dimensions."""
-        return {
-            "url": value.file.url,
-            "title": value.title,
-            "width": value.width,
-            "height": value.height,
-        }
 
 
 @register_snippet

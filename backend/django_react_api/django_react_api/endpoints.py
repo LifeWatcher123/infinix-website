@@ -11,9 +11,11 @@ class GameModelAPIViewset(BaseAPIViewSet):
     model = Game
 
     body_fields = BaseAPIViewSet.body_fields + [
+        'id',
         'title'
     ]
 
     listing_default_fields = BaseAPIViewSet.listing_default_fields = [
+        'id',
         'title'
     ]

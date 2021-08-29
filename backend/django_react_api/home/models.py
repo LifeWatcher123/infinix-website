@@ -31,7 +31,7 @@ class AlbumItems(Orderable):
 
     root_page = ParentalKey(
         'home.HomePage',
-        related_name='album_images'
+        related_name='album_items'
     )
     linked_page = models.OneToOneField(
         'blog.GameBlogPage',
@@ -61,6 +61,10 @@ class AlbumItems(Orderable):
         APIField('image'),
         APIField('linked_page'),
     ]
+
+    class Meta:
+        verbose_name = "Album Item"
+        verbose_name_plural = "Album Items"
 
 
 class HomePage(RoutablePageMixin, Page):
@@ -105,8 +109,8 @@ class HomePage(RoutablePageMixin, Page):
         PageChooserPanel('banner_cta_link_page'),
         MultiFieldPanel(
             [
-                InlinePanel("album_images", label="Album Image",
-                            min_num=1, max_num=4)
+                InlinePanel("album_items", label="Album Items",
+                            min_num=1)
             ],
             heading="Album Image(s)", help_text='Determines what Album items are shown.'
         ),
@@ -119,7 +123,7 @@ class HomePage(RoutablePageMixin, Page):
         APIField('banner_cta_link_url'),
         APIField('banner_cta_link_page'),
         APIField('banner_cta_text'),
-        APIField('album_images'),
+        APIField('album_items'),
     ]
 
     def __str__(self):

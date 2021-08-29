@@ -29,7 +29,7 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.api.fields import ImageRenditionField
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
 # Import `web_api`'s image serializer, as lazy importing doesn't work
-from web_api.models import ImageSerializedField
+from web_api.fields import *
 
 
 class GameBlogPageCarouselImages(Orderable):
@@ -173,6 +173,7 @@ class GameBlogPage(Page):
     ]
 
     api_fields = [
+        APIField('introduction'),
         APIField('game'),
         APIField("blog_authors"),
         APIField("body"),
@@ -221,7 +222,11 @@ class GameIndexPage(Page):
         FieldPanel('introduction', classname="full"),
         ImageChooserPanel('image'),
     ]
-
+    api_fields = [
+        APIField('introduction'),
+        APIField('image', serializer=ImageSerializedField()),
+        APIField('children', serializer=GameBlogPageField())
+    ]
 
     def get_games(self):
         """
@@ -231,6 +236,7 @@ class GameIndexPage(Page):
         return GameBlogPage.objects.live().descendant_of(
             self).order_by('-first_published_at')
 
+    @property
     def children(self):
         """
         Allows child objects (e.g. GamePage objects) to be accessible via the

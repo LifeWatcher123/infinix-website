@@ -31,10 +31,18 @@ SECRET_KEY = 'django-insecure-gu5^f#76od%$-t6l27_iod*$7vk)_xv1%%#zjx&1*qoa(yxoxh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost:3000",
+    "127.0.0.1"
+]
 
 # Since we’re working full localhost, CORS feature is disabled for now
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:8000"
+]
 
 # Application definition
 
@@ -79,6 +87,14 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # Added CORS middleware
+    # This should be placed as high as possible in the middleware list, as it breaks
+    # its CORS implementation.
+    #
+    # For more information, see:
+    # https://pypi.org/project/django-cors-headers/
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -86,8 +102,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # Added middleware
-    'corsheaders.middleware.CorsMiddleware',
+
     # Added Wagtail middleware
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
