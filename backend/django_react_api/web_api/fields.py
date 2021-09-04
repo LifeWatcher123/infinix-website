@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.fields import DateTimeField
 
 
 class ImageSerializedField(serializers.Field):
@@ -16,6 +17,8 @@ class ImageSerializedField(serializers.Field):
 
 class GameBlogPageField(serializers.Field):
     """
+    TODO Try to nest serializer fields.
+
     A custom serializer for blog.GameBlogPage.
 
     Takes into account that this processes a QuerySet from Wagtail,
@@ -37,13 +40,14 @@ class GameBlogPageField(serializers.Field):
         pages = []
         for child in queryset:
 
+            album_image = ImageSerializedField.to_representation(self, child.album_image)
+            published_date = DateTimeField(
+                format='%B %Y').to_representation(child.published_date)
             post_dict = {
                 "id": child.id,
                 "title": child.title,
-                "introduction": child.introduction,
-                # "blog_authors": child].blog_authors,
-                # "published_date": child.published_date,
-                # "album_image": child.album_image,
+                "published_date": published_date,
+                "album_image": album_image,
             }
             pages.append(post_dict)
         return pages

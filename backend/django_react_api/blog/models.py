@@ -17,6 +17,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Wagtail-specific model fields and admin editing integration dependencies.
 from modelcluster.fields import ParentalKey
+from rest_framework.fields import DateTimeField
 from wagtail.core.models import Page, Orderable
 from wagtail.core.fields import StreamField, RichTextField
 from wagtail.api import APIField
@@ -29,7 +30,7 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.api.fields import ImageRenditionField
 from wagtail.snippets.edit_handlers import SnippetChooserPanel
 # Import `web_api`'s image serializer, as lazy importing doesn't work
-from web_api.fields import *
+from web_api.fields import GameBlogPageField, ImageSerializedField
 
 
 class GameBlogPageCarouselImages(Orderable):
@@ -177,7 +178,7 @@ class GameBlogPage(Page):
         APIField('game'),
         APIField("blog_authors"),
         APIField("body"),
-        APIField('published_date'),
+        APIField('published_date', serializer=DateTimeField(format='%B %Y')),
         APIField('album_image', serializer=ImageSerializedField()),
         APIField('game_carousel_images'),
     ]
