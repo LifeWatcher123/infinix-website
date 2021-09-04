@@ -1,24 +1,36 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { NavHashLink } from "react-router-hash-link";
+import { genericHashLink, NavHashLink } from "react-router-hash-link";
 
 import { useRef } from "react";
+import { withRouter } from "react-router";
 import "./index.css";
 
 // TODO Implement dynamic items
-export const NavBar = (props) => {
+export const NavBar = withRouter((props) => {
   const navBarRef = props.refProps;
+
+  const delay = (e, address) => {
+    props.loading.setDone(false);
+    e.preventDefault();
+    setTimeout(() => {
+      props.history.push(address);
+    }, 350);
+  };
 
   return (
     <div
       className={props.className}
-      id={props.id}
+      id={props.containerId}
       data-bs-toggle="false"
       data-bs-scroll={props.scrollProp == "true" ? "true" : "false"}
       data-bs-backdrop={props.backdropProp == "false" ? "false" : "true"}
       ref={navBarRef}
     >
-      <nav className="app-navbar navbar navbar-expand-lg navbar-dark">
+      <nav
+        id={"innernav-" + props.containerId}
+        className="app-navbar navbar navbar-expand-lg navbar-dark"
+      >
         <div className="container-fluid">
           <a className="navbar-brand" href="#">
             Navbar
@@ -27,63 +39,53 @@ export const NavBar = (props) => {
             className="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
+            data-bs-target={"#" + props.containerId + "content"}
+            aria-controls={props.containerId + "content"}
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <div
+            className="collapse navbar-collapse"
+            id={props.containerId + "content"}
+          >
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <NavHashLink to="/#top" className="nav-link">
+                <NavHashLink
+                  to="/#top"
+                  className="nav-link"
+                  onClick={(e) => {
+                    if (props.location.pathname != "/") delay(e, "/#top");
+                  }}
+                >
                   Home
                 </NavHashLink>
               </li>
               <li className="nav-item">
                 <NavHashLink
                   to="/#featured"
+                  smooth
                   className="nav-link"
+                  onClick={(e) => {
+                    if (props.location.pathname != "/") delay(e, "/#featured");
+                  }}
                   scroll={(el) => scrollWithNavBarOffset(el, navBarRef, window)}
                 >
                   Featured Collections
                 </NavHashLink>
               </li>
-              <li className="nav-item dropdown">
+              <li className="nav-item">
                 <NavHashLink
-                  to="/collections"
-                  className="nav-link dropdown-toggle"
-                  id="navbarDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
+                  to="/collections/"
+                  className="nav-link"
+                  delay="5000"
+                  onClick={(e) => {
+                    if (props.location.pathname != "/collections/") delay(e, "/collections/#");
+                  }}
                 >
                   Collections
                 </NavHashLink>
-                <ul
-                  className="dropdown-menu dropdown-menu-dark"
-                  aria-labelledby="navbarDropdown"
-                >
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Action
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Another action
-                    </a>
-                  </li>
-                  <li>
-                    <hr className="dropdown-divider" />
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Something else here
-                    </a>
-                  </li>
-                </ul>
               </li>
             </ul>
             <form className="d-flex">
@@ -102,7 +104,7 @@ export const NavBar = (props) => {
       </nav>
     </div>
   );
-};
+});
 
 /**
  * Component extending the Navbar content with static navbar style.
@@ -115,10 +117,10 @@ export const CollapsableNavBar = (props) => {
     "offcanvas offcanvas-top bg-primary-mix-black-90 text-dark w-100 px-5 fixed-top offcanvas-navbar";
   return (
     <NavBar
-      items={props.items}
       className={customStyle}
-      id={props.id}
+      containerId={props.containerId}
       refProps={props.refProps}
+      loading={props.loading}
       scrollProp="true"
       backdropProp="false"
     />

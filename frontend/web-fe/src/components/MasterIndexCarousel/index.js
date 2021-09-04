@@ -1,5 +1,4 @@
 import React from "react";
-import "./carousel.css";
 
 import axios from "axios";
 import parse from "html-react-parser";
@@ -40,7 +39,7 @@ export default class MasterIndexCarousel extends React.Component {
     return (
       <div
         id={this.props.idProps}
-        className="carousel slide"
+        className="master-index-carousel carousel slide"
         data-bs-interval="3000"
         data-bs-ride="carousel"
         ref={this.props.refProps}
@@ -48,7 +47,7 @@ export default class MasterIndexCarousel extends React.Component {
         <div className="carousel-indicators">
           <button
             type="button"
-            data-bs-target="#myCarousel"
+            data-bs-target={`#${this.props.idProps}`}
             data-bs-slide-to="0"
             className="active"
             aria-current="true"
@@ -56,13 +55,13 @@ export default class MasterIndexCarousel extends React.Component {
           ></button>
           <button
             type="button"
-            data-bs-target="#myCarousel"
+            data-bs-target={`#${this.props.idProps}`}
             data-bs-slide-to="1"
             aria-label="Slide 2"
           ></button>
           <button
             type="button"
-            data-bs-target="#myCarousel"
+            data-bs-target={`#${this.props.idProps}`}
             data-bs-slide-to="2"
             aria-label="Slide 3"
           ></button>
@@ -71,7 +70,7 @@ export default class MasterIndexCarousel extends React.Component {
         <button
           className="carousel-control-prev"
           type="button"
-          data-bs-target="#myCarousel"
+          data-bs-target={`#${this.props.idProps}`}
           data-bs-slide="prev"
         >
           <span
@@ -83,7 +82,7 @@ export default class MasterIndexCarousel extends React.Component {
         <button
           className="carousel-control-next"
           type="button"
-          data-bs-target="#myCarousel"
+          data-bs-target={`#${this.props.idProps}`}
           data-bs-slide="next"
         >
           <span

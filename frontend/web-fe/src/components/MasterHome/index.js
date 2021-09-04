@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Collapse } from "bootstrap";
 import "./index.css";
 import MasterIndexCarousel from "../MasterIndexCarousel";
 import { NavBar, scrollWithNavBarOffset } from "../NavBars";
@@ -7,11 +6,11 @@ import { Footer } from "../Footer";
 
 import axios from "axios";
 import parse from "html-react-parser";
-import { API_ROOT, API_MAIN_HOMEPAGE_URL } from "../../constants";
-import { CoverSpinner } from "../Generics";
+import { API_ROOT, API_MAIN_HOMEPAGE_URL, NAVBAR_ID } from "../../constants";
 import { HashLink } from "react-router-hash-link";
+import { withRouter } from "react-router-dom";
 
-export default function MasterHome(props) {
+const MasterHome = withRouter((props) => {
   const [bannerTitle, setBannerTitle] = useState("");
   const [bannerSubtitle, setBannerSubtitle] = useState("");
   const [bannerImageUrl, setBannerImageUrl] = useState("");
@@ -19,19 +18,15 @@ export default function MasterHome(props) {
   const [bannerCtaUrl, setBannerCtaUrl] = useState("");
 
   const albumRef = useRef();
-  const spinner = useRef();
-
-  const SPINNER_ID = "spinner-0001";
 
   useEffect(() => {
-    spinner.current = document.getElementById(SPINNER_ID);
-
     fetchData();
-  }, []);
 
-  const sleep = (ms) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  };
+    // TODO Try to make the scrolling behavior neater. Could implement a subclass of NavLink to do so.
+    const el = document.getElementById(props.location.hash.substring(1));
+    if (el != null) scrollWithNavBarOffset(el, props.navBarRefProp, window);
+    else window.scrollTo(0, 0);
+  }, []);
 
   const fetchData = () => {
     axios
@@ -47,16 +42,14 @@ export default function MasterHome(props) {
             ? res.data.banner_cta_link_page
             : res.data.banner_cta_link_url
         );
-        return sleep(500);
       })
       .finally(() => {
-        Collapse.getOrCreateInstance(spinner.current).hide();
+        props.loading.setDone(true);
       });
   };
 
   return (
     <>
-      <CoverSpinner id={SPINNER_ID} />
       <div className="d-flex flex-column">
         <div
           className="master-head text-center text-white bg-dark d-flex flex-column vh-100"
@@ -72,7 +65,11 @@ export default function MasterHome(props) {
           }}
         >
           <header>
-            <NavBar refProps={props.navBarRefProp}/>
+            <NavBar
+              containerId={NAVBAR_ID}
+              refProps={props.navBarRefProp}
+              loading={props.loading}
+            />
           </header>
 
           <main className="m-auto pb-5">
@@ -82,7 +79,9 @@ export default function MasterHome(props) {
               <HashLink
                 to="/#featured"
                 className="text-dark btn btn-lg btn-secondary fw-bold border-white bg-white"
-                scroll={el => scrollWithNavBarOffset(el, props.navBarRefProp, window)}
+                scroll={(el) =>
+                  scrollWithNavBarOffset(el, props.navBarRefProp, window)
+                }
               >
                 {bannerCtaText}
               </HashLink>
@@ -94,4 +93,5 @@ export default function MasterHome(props) {
       <Footer />
     </>
   );
-}
+});
+export default MasterHome;

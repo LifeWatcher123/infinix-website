@@ -1,13 +1,29 @@
 import React from "react";
-import { Offcanvas } from "bootstrap";
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import { Offcanvas, Collapse } from "bootstrap";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
 import MasterHome from "./components/MasterHome/";
-import { CollapsableNavBar } from "./components/NavBars";
+import GameAlbums from "./components/GameAlbums/";
+import { CoverSpinner } from "./components/Generics/";
+import {
+  CollapsableNavBar,
+  scrollWithNavBarOffset,
+} from "./components/NavBars";
+import {
+  API_GAMEBLOGPAGES_WITH_THUMBNAIL_URL,
+  API_GAMEINDEXPAGES_WITH_FIELDS,
+  API_ROOT,
+  COLLAPSE_NAVBAR_ID,
+  SPINNER_ID,
+} from "./constants";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import { sleep } from "./components/Generics/";
 
-const App = () => {
-  const COLLAPSE_NAVBAR_ID = "collapsable-masterhome-navbar-0001";
+import { offset } from "@popperjs/core";
+
+export const App = () => {
+  const [done, setDone] = useState();
 
   const navBarRef = useRef();
   const navbarToCollapse = useRef();
@@ -17,7 +33,13 @@ const App = () => {
   const isNavBarHiding = useRef(false);
   const isNavBarShowing = useRef(false);
 
+  const spinner = useRef();
+
   useEffect(() => {
+    spinner.current = Collapse.getOrCreateInstance(
+      document.getElementById(SPINNER_ID),
+      { toggle: false }
+    );
     navbarToCollapse.current = document.getElementById(COLLAPSE_NAVBAR_ID);
     navBarCollapseControl.current = Offcanvas.getOrCreateInstance(
       navbarToCollapse.current
@@ -32,7 +54,42 @@ const App = () => {
       setHidingNavbarStatus
     );
     window.addEventListener("scroll", toggleNavBar);
+
+    window.addEventListener("hashchange", offsetFragmentScroll);
   }, []);
+
+  useEffect(() => {
+    if (done)
+      sleep(500).then(() => {
+        spinner.current.hide();
+      });
+    else {
+      spinner.current.show();
+
+      if (navBarStatus.current == true) {
+        if (isNavBarShowing.current) {
+          navbarToCollapse.current.addEventListener(
+            "shown.bs.offcanvas",
+            hideNavBar
+          );
+        } else {
+          hideNavBar();
+        }
+      }
+    }
+  }, [done]);
+
+  const offsetFragmentScroll = () => {
+    if (window.location.hash) {
+      var hash = window.location.hash.substring(1);
+      if (document.getElementById(hash) == null)
+        scrollWithNavBarOffset(
+          document.getElementById(hash),
+          navBarRef,
+          window
+        );
+    }
+  };
 
   const toggleNavBar = () => {
     let scrolled = document.documentElement.scrollTop;
@@ -90,21 +147,42 @@ const App = () => {
   const setShowingNavBarStatus = () => {
     isNavBarShowing.current = false;
   };
+
   return (
     <Router>
       <div>
-        <CollapsableNavBar id={COLLAPSE_NAVBAR_ID} refProps={navBarRef} />
+        <CoverSpinner id={SPINNER_ID} />
+        <CollapsableNavBar
+          containerId={COLLAPSE_NAVBAR_ID}
+          refProps={navBarRef}
+          loading={{ setDone }}
+        />
         <Switch>
           <Route
             exact
             path="/"
-            render={() =>
-              <MasterHome navBarRefProp={navBarRef}/>
-            }
+            render={() => (
+              <MasterHome navBarRefProp={navBarRef} loading={{ setDone }} />
+            )}
+          ></Route>
+          <Route
+            exact
+            path="/collections"
+            render={() => (
+              <GameAlbums
+                navBarRefProp={navBarRef}
+                loading={{ setDone }}
+                albumDataUrl={API_GAMEINDEXPAGES_WITH_FIELDS}
+                albumBannerUrl={
+                  API_ROOT +
+                  "/media/original_images/Top-10-Best-Optimized-PC-Games-2020.jpg"
+                }
+                idProps={"carousel-collections"}
+              />
+            )}
           ></Route>
         </Switch>
       </div>
     </Router>
   );
 };
-export default App;

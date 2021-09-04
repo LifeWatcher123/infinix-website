@@ -8,8 +8,6 @@
 .master-head {
   text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
   box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
-  padding-left: 10rem;
-  padding-right: 10rem;
   height: 100vh;
   background-attachment: fixed;
   background-position: center;

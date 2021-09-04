@@ -15,3 +15,23 @@ export const CoverSpinner = (props) => {
     </div>
   );
 };
+
+export const PseudoBackground = (props) => {
+  return (
+    <div
+      className="pseudo-background"
+      style={{
+        backgroundImage:
+          `url(${props.backgroundImageUrl})`,
+        backgroundAttachment: "fixed",
+        backgroundPosition: "top",
+        backgroundSize: "cover",
+        opacity: props.opacity
+      }}
+    />
+  );
+};
+
+export const sleep = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
