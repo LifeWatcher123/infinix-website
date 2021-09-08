@@ -3,15 +3,17 @@ import "./index.css";
 
 import axios from "axios";
 import parse from "html-react-parser";
+import { useHistory, useLocation } from "react-router";
 import {
   API_ROOT,
   API_GAMEBLOGPAGES_WITH_THUMBNAIL_URL,
   NAVBAR_ID,
   API_PAGES_URL,
 } from "../../constants";
-import { NavBar } from "../NavBars";
+import { delay, NavBar } from "../NavBars";
 import { Footer } from "../Footer";
 import { PseudoBackground } from "../Generics";
+import { Link } from "react-router-dom";
 /**
  * This implements a dynamic rendering of album items from an API.
  * The following props must be supplied:
@@ -83,6 +85,7 @@ const GameAlbums = (props) => {
                 banner_subtitle={gameAlbumItem.introduction}
                 banner_image={gameAlbumItem.image.url}
                 data={gameAlbumItem.children}
+                loading={props.loading}
               />
             );
           })
@@ -112,7 +115,7 @@ const GameAlbums = (props) => {
         opacity={activePseudoBackgroundLayer == 1 ? "1" : "0"}
       />
       <div
-        className="game-album body-padding"
+        className="game-album"
         style={{
           backgroundImage:
             "linear-gradient(0deg, rgba(25,12,0,0.95) 0%, rgba(25,12,0,0.85) 76%, rgba(25,12,0,0.95) 100%)",
@@ -121,13 +124,11 @@ const GameAlbums = (props) => {
           backgroundSize: "cover",
         }}
       >
-        <header>
-          <NavBar
-            containerId={NAVBAR_ID}
-            refProps={props.navBarRefProp}
-            loading={props.loading}
-          />
-        </header>
+        <NavBar
+          containerId={NAVBAR_ID}
+          refProps={props.navBarRefProp}
+          loading={props.loading}
+        />
         <div
           id={props.idProps}
           className="carousel slide"
@@ -163,7 +164,7 @@ const GameAlbums = (props) => {
             type="button"
             data-bs-target={"#" + props.idProps}
             data-bs-slide="prev"
-            onClick={window.scrollTo(0,0)}
+            onClick={window.scrollTo(0, 0)}
           >
             <span
               className="carousel-control-prev-icon"
@@ -176,7 +177,7 @@ const GameAlbums = (props) => {
             type="button"
             data-bs-target={"#" + props.idProps}
             data-bs-slide="next"
-            onClick={window.scrollTo(0,0)}
+            onClick={window.scrollTo(0, 0)}
           >
             <span
               className="carousel-control-next-icon"
@@ -196,14 +197,18 @@ const GameAlbumItem = (props) => {
 
   useEffect(() => {
     setAlbumItems(
-      props.data.map((game) => (
-        <AlbumItem
-          key={game.id}
-          title={game.title}
-          published_date={game.published_date}
-          url={game.album_image.url}
-        />
-      ))
+      props.data.map((game) => {
+        return (
+          <AlbumItem
+            key={`album-item-${game.id}`}
+            id={game.id}
+            title={game.title}
+            published_date={game.published_date}
+            album_url={game.album_image.url}
+            loading={props.loading}
+          />
+        );
+      })
     );
   }, []);
 
@@ -237,6 +242,8 @@ const GameAlbumItem = (props) => {
  *  - published_date
  */
 const AlbumItem = (props) => {
+  const history = useHistory();
+  const location = useLocation();
   return (
     <div className="col-lg-4 d-flex align-items-stretch">
       <div className="card shadow-sm m-3" style={{ width: "22rem" }}>
@@ -244,7 +251,7 @@ const AlbumItem = (props) => {
           className="bd-placeholder-img card-img-top"
           width="100%"
           height="225"
-          src={API_ROOT + props.url}
+          src={API_ROOT + props.album_url}
           role="img"
           preserveAspectRatio="xMidYMid slice"
           focusable="false"
@@ -254,9 +261,17 @@ const AlbumItem = (props) => {
           <h6 className="card-text">{props.title}</h6>
           <div className="d-flex justify-content-between align-items-center">
             <div className="btn-group">
-              <button type="button" className="btn btn-outline-primary">
+              <Link
+                type="button"
+                to={`/blog/${props.id}`}
+                className="btn btn-outline-primary"
+                onClick={(e) => {
+                  if (location.pathname.split("/")[1] != "blog")
+                    delay(e, `/blog/${props.id}`, props.loading, history);
+                }}
+              >
                 Open
-              </button>
+              </Link>
             </div>
             <small className="text-muted">{props.published_date}</small>
           </div>

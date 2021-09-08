@@ -10,14 +10,6 @@ import "./index.css";
 export const NavBar = withRouter((props) => {
   const navBarRef = props.refProps;
 
-  const delay = (e, address) => {
-    props.loading.setDone(false);
-    e.preventDefault();
-    setTimeout(() => {
-      props.history.push(address);
-    }, 350);
-  };
-
   return (
     <div
       className={props.className}
@@ -56,7 +48,8 @@ export const NavBar = withRouter((props) => {
                   to="/#top"
                   className="nav-link"
                   onClick={(e) => {
-                    if (props.location.pathname != "/") delay(e, "/#top");
+                    if (props.location.pathname != "/")
+                      delay(e, "/#top", props.loading, props.history);
                   }}
                 >
                   Home
@@ -68,7 +61,8 @@ export const NavBar = withRouter((props) => {
                   smooth
                   className="nav-link"
                   onClick={(e) => {
-                    if (props.location.pathname != "/") delay(e, "/#featured");
+                    if (props.location.pathname != "/")
+                      delay(e, "/#featured", props.loading, props.history);
                   }}
                   scroll={(el) => scrollWithNavBarOffset(el, navBarRef, window)}
                 >
@@ -81,7 +75,8 @@ export const NavBar = withRouter((props) => {
                   className="nav-link"
                   delay="5000"
                   onClick={(e) => {
-                    if (props.location.pathname != "/collections/") delay(e, "/collections/#");
+                    if (props.location.pathname != "/collections/")
+                      delay(e, "/collections/#", props.loading, props.history);
                   }}
                 >
                   Collections
@@ -114,7 +109,7 @@ export const NavBar = withRouter((props) => {
  */
 export const CollapsableNavBar = (props) => {
   var customStyle =
-    "offcanvas offcanvas-top bg-primary-mix-black-90 text-dark w-100 px-5 fixed-top offcanvas-navbar";
+    "offcanvas offcanvas-top bg-primary-mix-black-90 text-dark w-100 fixed-top offcanvas-navbar";
   return (
     <NavBar
       className={customStyle}
@@ -123,6 +118,17 @@ export const CollapsableNavBar = (props) => {
       loading={props.loading}
       scrollProp="true"
       backdropProp="false"
+    />
+  );
+};
+
+export const BlockNavBar = (props) => {
+  return (
+    <NavBar
+      className="bg-primary-mix-black-90 text-dark w-100"
+      containerId={props.containerId}
+      refProps={props.refProps}
+      loading={props.loading}
     />
   );
 };
@@ -136,4 +142,12 @@ export const scrollWithNavBarOffset = (el, navBarRef, window) => {
     top: offsetPosition,
     behavior: "smooth",
   });
+};
+
+export const delay = (e, address, loading, history) => {
+  loading.setDone(false);
+  e.preventDefault();
+  setTimeout(() => {
+    history.push(address);
+  }, 350);
 };

@@ -64,13 +64,11 @@ const MasterHome = withRouter((props) => {
               ")",
           }}
         >
-          <header>
-            <NavBar
-              containerId={NAVBAR_ID}
-              refProps={props.navBarRefProp}
-              loading={props.loading}
-            />
-          </header>
+          <NavBar
+            containerId={NAVBAR_ID}
+            refProps={props.navBarRefProp}
+            loading={props.loading}
+          />
 
           <main className="m-auto pb-5">
             <h1>{bannerTitle}</h1>

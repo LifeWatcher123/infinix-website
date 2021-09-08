@@ -10,7 +10,6 @@ import {
   scrollWithNavBarOffset,
 } from "./components/NavBars";
 import {
-  API_GAMEBLOGPAGES_WITH_THUMBNAIL_URL,
   API_GAMEINDEXPAGES_WITH_FIELDS,
   API_ROOT,
   COLLAPSE_NAVBAR_ID,
@@ -20,7 +19,7 @@ import {
 import { useRef, useEffect, useState } from "react";
 import { sleep } from "./components/Generics/";
 
-import { offset } from "@popperjs/core";
+import BlogContent from "./components/BlogContent";
 
 export const App = () => {
   const [done, setDone] = useState();
@@ -34,6 +33,7 @@ export const App = () => {
   const isNavBarShowing = useRef(false);
 
   const spinner = useRef();
+  const bodyContentRef = useRef();
 
   useEffect(() => {
     spinner.current = Collapse.getOrCreateInstance(
@@ -93,13 +93,11 @@ export const App = () => {
 
   const toggleNavBar = () => {
     let scrolled = document.documentElement.scrollTop;
-    let maxHeight =
-      document.documentElement.scrollHeight -
-      document.documentElement.clientHeight;
 
-    let progress = (scrolled / maxHeight) * 100;
-
-    if (progress >= 10 && navBarStatus.current == false) {
+    if (
+      scrolled >= navBarRef.current.clientHeight &&
+      navBarStatus.current == false
+    ) {
       if (isNavBarHiding.current) {
         navbarToCollapse.current.addEventListener(
           "hidden.bs.offcanvas",
@@ -108,7 +106,10 @@ export const App = () => {
       } else {
         showNavBar();
       }
-    } else if (progress < 10 && navBarStatus.current == true) {
+    } else if (
+      scrolled < navBarRef.current.clientHeight &&
+      navBarStatus.current == true
+    ) {
       if (isNavBarShowing.current) {
         navbarToCollapse.current.addEventListener(
           "shown.bs.offcanvas",
@@ -157,31 +158,40 @@ export const App = () => {
           refProps={navBarRef}
           loading={{ setDone }}
         />
-        <Switch>
-          <Route
-            exact
-            path="/"
-            render={() => (
-              <MasterHome navBarRefProp={navBarRef} loading={{ setDone }} />
-            )}
-          ></Route>
-          <Route
-            exact
-            path="/collections"
-            render={() => (
-              <GameAlbums
-                navBarRefProp={navBarRef}
-                loading={{ setDone }}
-                albumDataUrl={API_GAMEINDEXPAGES_WITH_FIELDS}
-                albumBannerUrl={
-                  API_ROOT +
-                  "/media/original_images/Top-10-Best-Optimized-PC-Games-2020.jpg"
-                }
-                idProps={"carousel-collections"}
-              />
-            )}
-          ></Route>
-        </Switch>
+        <div ref={bodyContentRef}>
+          <Switch>
+            <Route
+              exact
+              path="/"
+              render={() => (
+                <MasterHome navBarRefProp={navBarRef} loading={{ setDone }} />
+              )}
+            />
+            <Route
+              exact
+              path="/collections"
+              render={() => (
+                <GameAlbums
+                  navBarRefProp={navBarRef}
+                  loading={{ setDone }}
+                  albumDataUrl={API_GAMEINDEXPAGES_WITH_FIELDS}
+                  albumBannerUrl={
+                    API_ROOT +
+                    "/media/original_images/Top-10-Best-Optimized-PC-Games-2020.jpg"
+                  }
+                  idProps={"carousel-collections"}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/blog/:id"
+              render={({match}) => (
+                <BlogContent navBarRefProp={navBarRef} loading={{ setDone }} blogId={match.params.id}/>
+              )}
+            />
+          </Switch>
+        </div>
       </div>
     </Router>
   );
