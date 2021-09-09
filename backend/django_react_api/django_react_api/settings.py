@@ -11,10 +11,16 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Variables needed by Wagtail
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+WAGTAIL_SITE_NAME = 'Infinix - Realm of Gamers'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -25,27 +31,70 @@ SECRET_KEY = 'django-insecure-gu5^f#76od%$-t6l27_iod*$7vk)_xv1%%#zjx&1*qoa(yxoxh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost:3000",
+    "127.0.0.1"
+]
 
 # Since we’re working full localhost, CORS feature is disabled for now
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:8000"
+]
 
 # Application definition
 
 INSTALLED_APPS = [
+    # Added Django app 'web_api'
+    'web_api.apps.WebApiConfig',
+
+    # Default Django configs
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     # Added dependencies
     'rest_framework',
     'corsheaders',
-    'web_api'
+
+    # Added Wagtail dependencies
+    'wagtail.contrib.forms',
+    'wagtail.contrib.redirects',
+    'wagtail.embeds',
+    'wagtail.sites',
+    'wagtail.users',
+    'wagtail.snippets',
+    'wagtail.documents',
+    'wagtail.images',
+    'wagtail.search',
+    'wagtail.admin',
+    'wagtail.core',
+    # Added Wagtail API for headless CMS
+    'wagtail.api.v2',
+
+    # Added Third-Party Wagtail dependencies
+    'taggit',
+    'modelcluster',
+
+    # Project apps
+    'home',
+    'blog',
 ]
 
 MIDDLEWARE = [
+    # Added CORS middleware
+    # This should be placed as high as possible in the middleware list, as it breaks
+    # its CORS implementation.
+    #
+    # For more information, see:
+    # https://pypi.org/project/django-cors-headers/
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -53,8 +102,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # Added middleware
-    'corsheaders.middleware.CorsMiddleware',
+
+    # Added Wagtail middleware
+    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'django_react_api.urls'
