@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./index.css";
 
 import axios from "axios";
@@ -14,6 +14,7 @@ import { delay, NavBar } from "../NavBars";
 import { Footer } from "../Footer";
 import { PseudoBackground } from "../Generics";
 import { Link } from "react-router-dom";
+import { Carousel } from "bootstrap";
 /**
  * This implements a dynamic rendering of album items from an API.
  * The following props must be supplied:
@@ -34,6 +35,8 @@ const GameAlbums = (props) => {
     _setBackgroundImageUrl(data);
   };
 
+  const isFirstTimeFetchingData = useRef(true);
+
   // For updating inside callbacks
   const activePseudoBackgroundLayerRef = React.useRef(
     activePseudoBackgroundLayer
@@ -44,6 +47,7 @@ const GameAlbums = (props) => {
   };
 
   const gameAlbumCarouselRef = useRef();
+  const redirectTargetIndex = useRef();
 
   useEffect(() => {
     fetchData();
@@ -51,14 +55,26 @@ const GameAlbums = (props) => {
     gameAlbumCarouselRef.current.addEventListener(
       "slide.bs.carousel",
       (domObj) => {
-        let banner_image_url =
-          API_ROOT + domObj.relatedTarget.getAttribute("banner_image");
+        if (typeof domObj.relatedTarget != "undefined") {
+          let banner_image_url =
+            API_ROOT + domObj.relatedTarget.getAttribute("banner_image");
 
-        setBackgroundImageUrl(banner_image_url);
-        toggleActivePseudoBackground();
+          setBackgroundImageUrl(banner_image_url);
+          toggleActivePseudoBackground();
+        }
       }
     );
   }, []);
+
+  useEffect(() => {
+    if (isFirstTimeFetchingData) {
+      let carouselControl = Carousel.getOrCreateInstance(
+        gameAlbumCarouselRef.current
+      );
+      carouselControl.to(redirectTargetIndex.current);
+      isFirstTimeFetchingData.current = false;
+    }
+  }, [gameAlbumItems]);
 
   const toggleActivePseudoBackground = () => {
     let currentActive = activePseudoBackgroundLayerRef.current;
@@ -77,6 +93,10 @@ const GameAlbums = (props) => {
           res.data.items.map((gameAlbumItem, iterIndex) => {
             if (backgroundImageUrlRef.current == "")
               setBackgroundImageUrl(API_ROOT + gameAlbumItem.image.url);
+
+            if (gameAlbumItem.id == props.redirectToId)
+              redirectTargetIndex.current = iterIndex;
+
             return (
               <GameAlbumItem
                 key={gameAlbumItem.id}
