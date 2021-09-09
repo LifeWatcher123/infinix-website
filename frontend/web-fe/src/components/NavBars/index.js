@@ -6,7 +6,6 @@ import { useRef } from "react";
 import { withRouter } from "react-router";
 import "./index.css";
 
-// TODO Implement dynamic items
 export const NavBar = withRouter((props) => {
   const navBarRef = props.refProps;
 
