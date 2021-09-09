@@ -86,7 +86,7 @@ const MasterHome = withRouter((props) => {
             </p>
           </main>
         </div>
-        <MasterIndexCarousel refProps={albumRef} idProps="featured" />
+        <MasterIndexCarousel refProps={albumRef} idProps="featured" loading={props.loading}/>
       </div>
       <Footer />
     </>

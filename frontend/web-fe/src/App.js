@@ -169,6 +169,23 @@ export const App = () => {
             />
             <Route
               exact
+              path="/collections/:id"
+              render={({match}) => (
+                <GameAlbums
+                  navBarRefProp={navBarRef}
+                  loading={{ setDone }}
+                  albumDataUrl={API_GAMEINDEXPAGES_WITH_FIELDS}
+                  albumBannerUrl={
+                    API_ROOT +
+                    "/media/original_images/Top-10-Best-Optimized-PC-Games-2020.jpg"
+                  }
+                  idProps={"carousel-collections"}
+                  redirectToId={match.params.id}
+                />
+              )}
+            />
+            <Route
+              exact
               path="/collections"
               render={() => (
                 <GameAlbums
