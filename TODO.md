@@ -10,4 +10,8 @@ These are what I have in mind:
 
 ### Feature Change Tasks
 - [ ] Attempt to migrate to TailwindCSS.
+
+### Feature Addition Tasks
+- [ ] Attempt to implement a sidebar component for `BlogContent` component.
+- [ ] Implement search functionality.
 - [ ] Attempt to create static builds; possibly to be hosted on Github Pages.
