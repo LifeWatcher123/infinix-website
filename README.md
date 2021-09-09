@@ -19,3 +19,37 @@ Except for those frameworks being one of the most used, there isn't any particul
 ## Planned Changes
 
 Please see [this to-do list](https://github.com/LifeWatcher123/infinix-website/blob/main/TODO.md).
+
+## Running locally
+
+I haven't attempted to build it yet. I don't know specifically how to install prerequisites nor how to run it on a Windows machine, but it should be similar enough.
+
+But to develop on Ubuntu:
+1. Install Python3 (Tested on 3.9.5), NPM: 
+```
+apt install python3 nodejs npm
+```
+2. Install Python Virtualenv: 
+```
+pip install virtualenv
+```
+3. Create and activate a virtual environment: 
+```
+python3 -m venv env && source env/bin/activate
+```
+4. Install backend prerequisites from `requirements.txt`: 
+```
+pip install -r requirements.txt
+```
+5. Install frontend prerequisites: 
+```
+npm i
+```
+
+After that, run the following on separate terminals to run the servers:
+```
+python manage.py runserver
+```
+```
+npm start
+```
