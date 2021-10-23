@@ -23,8 +23,8 @@ export const NavBar = withRouter((props) => {
         className="app-navbar navbar navbar-expand-lg navbar-dark"
       >
         <div className="container-fluid">
-          <a className="navbar-brand" href="#">
-            Navbar
+          <a className="navbar-brand fw-bolder" href="#">
+            INFINIX
           </a>
           <button
             className="navbar-toggler"

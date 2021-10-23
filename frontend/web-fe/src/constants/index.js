@@ -1,7 +1,7 @@
 // Change the values depending on the back-end's settings and data URLs.
 
 export const API_ROOT = "http://127.0.0.1:8000";
-export const WEBPAGE_ROOT = "http://localhost:3000";
+export const WEBPAGE_ROOT = "http://localhost:5000";
 
 export const API_GAMES_URL = API_ROOT + "/wagtail-api/games/";
 export const API_PAGES_URL = API_ROOT + "/wagtail-api/pages/";
