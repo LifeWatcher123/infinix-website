@@ -1,0 +1,21 @@
+@import '../../styles/utilities/_variables.scss';
+
+.head .btn-secondary,
+.head .btn-secondary:hover,
+.head .btn-secondary:focus {
+  color: #333;
+  text-shadow: none; /* Prevent inheritance from `body` */
+}
+
+.head {
+  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
+  height: $cover-height;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+}
+
+.head .cover-container {
+  max-width: 42em;
+}

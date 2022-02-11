@@ -1,0 +1,33 @@
+@import "utilities/variables";
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+@import "utilities/bootswatch";
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: $font-family-base;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@for $i from 20 through 100 {
+  @if $i % 10 == 0 {
+    $percentage: $i * 1%;
+    .bg-primary-mix-black-#{$i} {
+      background-color: mix(black, $primary, $percentage);
+    }
+    .bg-primary-mix-white-#{$i} {
+      background-color: mix(white, $primary, $percentage);
+    }
+  }
+}
+
+
